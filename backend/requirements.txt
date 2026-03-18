@@ -1,0 +1,8 @@
+Django
+djangorestframework
+django-cors-headers
+pymongo
+pdfminer.six
+python-docx
+spacy
+scikit-learn
