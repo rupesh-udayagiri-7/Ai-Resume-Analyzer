@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Advanced Todo List App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-list-check"></i> Advanced Todo List</h1>
+                <p class="subtitle">Manage your tasks efficiently</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="tasks">
+                <i class="fas fa-tasks"></i> Tasks
+            </button>
+            <button class="tab-btn" data-tab="categories">
+                <i class="fas fa-tags"></i> Categories
+            </button>
+            <button class="tab-btn" data-tab="stats">
+                <i class="fas fa-chart-bar"></i> Statistics
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- TASKS TAB -->
+            <div id="tasks-tab" class="tab-content active">
+                <!-- Input Section -->
+                <div class="input-section">
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="todoInput" 
+                            class="todo-input" 
+                            placeholder="Add a new task..."
+                            autocomplete="off"
+                        >
+                        <select id="categorySelect" class="category-input">
+                            <option value="">Select Category...</option>
+                        </select>
+                        <select id="prioritySelect" class="priority-input">
+                            <option value="low">🟢 Low</option>
+                            <option value="medium" selected>🟡 Medium</option>
+                            <option value="high">🔴 High</option>
+                        </select>
+                        <button id="addBtn" class="add-btn">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters & Controls -->
+                <div class="controls-section">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">
+                            <i class="fas fa-list"></i> All <span class="count">0</span>
+                        </button>
+                        <button class="filter-btn" data-filter="active">
+                            <i class="fas fa-circle"></i> Active <span class="count">0</span>
+                        </button>
+                        <button class="filter-btn" data-filter="completed">
+                            <i class="fas fa-check-circle"></i> Completed <span class="count">0</span>
+                        </button>
+                        <button class="filter-btn" data-filter="important">
+                            <i class="fas fa-star"></i> Important <span class="count">0</span>
+                        </button>
+                    </div>
+
+                    <div class="action-group">
+                        <select id="sortSelect" class="sort-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="priority">By Priority</option>
+                            <option value="alphabetical">Alphabetical</option>
+                            <option value="duedate">By Due Date</option>
+                        </select>
+                        <button id="clearBtn" class="clear-btn" title="Clear completed tasks">
+                            <i class="fas fa-trash"></i> Clear Completed
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total:</span>
+                        <span class="stat-value" id="totalCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Completed:</span>
+                        <span class="stat-value" id="completedCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Pending:</span>
+                        <span class="stat-value" id="pendingCount">0</span>
+                    </div>
+                </div>
+
+                <!-- Todo List -->
+                <div class="todo-list-container">
+                    <ul id="todoList" class="todo-list"></ul>
+                    <div id="emptyState" class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No tasks yet. Add one to get started!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORIES TAB -->
+            <div id="categories-tab" class="tab-content">
+                <div class="categories-section">
+                    <div class="category-input-wrapper">
+                        <input 
+                            type="text" 
+                            id="categoryNameInput" 
+                            class="category-name-input" 
+                            placeholder="Enter category name..."
+                        >
+                        <input 
+                            type="color" 
+                            id="categoryColorInput" 
+                            class="category-color-input" 
+                            value="#6366f1"
+                        >
+                        <button id="addCategoryBtn" class="add-category-btn">
+                            <i class="fas fa-plus"></i> Add Category
+                        </button>
+                    </div>
+                    <div id="categoriesList" class="categories-list"></div>
+                </div>
+            </div>
+
+            <!-- STATISTICS TAB -->
+            <div id="stats-tab" class="tab-content">
+                <div class="statistics-section">
+                    <div class="stat-card">
+                        <h3>Completion Rate</h3>
+                        <div class="progress-circle">
+                            <svg viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" class="progress-bg"></circle>
+                                <circle cx="50" cy="50" r="45" class="progress-fill" id="progressCircle"></circle>
+                            </svg>
+                            <span class="progress-text" id="progressText">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>Tasks by Priority</h3>
+                        <div class="priority-stats">
+                            <div class="priority-stat">
+                                <span class="priority-label">🔴 High</span>
+                                <span class="priority-count" id="highCount">0</span>
+                            </div>
+                            <div class="priority-stat">
+                                <span class="priority-label">🟡 Medium</span>
+                                <span class="priority-count" id="mediumCount">0</span>
+                            </div>
+                            <div class="priority-stat">
+                                <span class="priority-label">🟢 Low</span>
+                                <span class="priority-count" id="lowCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>Tasks by Category</h3>
+                        <div id="categoryStats" class="category-stats"></div>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>Daily Activity</h3>
+                        <div id="activityChart" class="activity-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p><i class="fas fa-save"></i> All data is automatically saved to local storage</p>
+                <div class="footer-actions">
+                    <button id="exportBtn" class="footer-btn" title="Export tasks as JSON">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button id="importBtn" class="footer-btn" title="Import tasks from JSON">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
