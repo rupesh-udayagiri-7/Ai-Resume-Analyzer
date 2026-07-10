@@ -92,3 +92,46 @@ class JobDetailView(APIView):
         if success:
             return Response({"message": "Job deleted successfully"}, status=status.HTTP_200_OK)
         return Response({"error": "Job not found or deletion failed"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RecommendRoleView(APIView):
+    def post(self, request, *args, **kwargs):
+        resume_file: UploadedFile = request.FILES.get('resume')
+        if not resume_file:
+            return Response(
+                {"error": "Please provide a resume file."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        resume_text = extract_text_from_file(resume_file, resume_file.name)
+        if not resume_text:
+            return Response(
+                {"error": "Failed to extract text from the resume file. Ensure it is a valid PDF or DOCX."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        jobs = get_all_jobs()
+        if not jobs:
+            return Response(
+                {"error": "No job descriptions found in the database. Please add jobs in the Admin panel first."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+            
+        recommendations = []
+        for job in jobs:
+            match_results = calculate_match(resume_text, job['description'])
+            recommendations.append({
+                "job_id": job['id'],
+                "title": job['title'],
+                "description": job['description'],
+                "match_score": match_results['match_score'],
+                "ats_score": match_results['ats_score'],
+                "matched_skills": match_results['matched_skills'],
+                "missing_skills": match_results['missing_skills'],
+                "suggestions": match_results['suggestions']
+            })
+            
+        # Sort recommendations by match_score descending
+        recommendations.sort(key=lambda x: x['match_score'], reverse=True)
+        
+        return Response(recommendations, status=status.HTTP_200_OK)
